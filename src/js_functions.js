@@ -170,6 +170,42 @@ function dispose_model(model_id, fn_to_continue_in_cpp, status_pointer) {
     }
 }
 
+function log_data(data, callback, status_pointer) {
+    console.log('I am in log data');
+    try {
+        console.log(UTF8ToString(data));
+        Module._resume_execution(callback, status_pointer, 0);
+    } catch (e) {
+        Module._resume_execution(callback, status_pointer, 1);
+    }
+}
+
+function log_multiple(data1, data2, callback, status_pointer)
+{
+    try {
+        console.log(UTF8ToString(data1));
+        console.log(UTF8ToString(data2));
+        Module._resume_execution(callback, status_pointer, 0);
+    } catch (e) {
+        Module._resume_execution(callback, status_pointer, 1);
+    }
+}
+
+function error_func(callback, status_pointer) {
+    Module._resume_execution(callback, status_pointer, 1);
+}
+
+function long_running_func(delay_in_ms, callback, status_pointer) {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    delay(delay_in_ms).then(() => {
+        console.log("Waited for " + delay_in_ms + " ms");
+        Module._resume_execution(callback, status_pointer, 0);
+    }).catch(err => {
+        console.log(err);
+        Module._resume_execution(callback, status_pointer, 1)
+    });
+}
+
 mergeInto(LibraryManager.library, {
     import_tfjs: import_tfjs,
     check_pretfjs: check_pretfjs,
@@ -179,5 +215,9 @@ mergeInto(LibraryManager.library, {
     load_graph_model_from_buffer: load_graph_model_from_buffer,
     load_layer_model_from_buffer: load_layer_model_from_buffer,
     predict_in_js: predict_in_js,
-    dispose_model: dispose_model
+    dispose_model: dispose_model,
+    log_data: log_data,
+    log_multiple: log_multiple,
+    error_func: error_func,
+    long_running_func: long_running_func
 })

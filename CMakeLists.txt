@@ -24,6 +24,7 @@ add_executable(tfjs_async_to_sync
         ${PROJECT_SOURCE_DIR}/src/test_tfjs.cpp
         ${PROJECT_SOURCE_DIR}/src/tfjs.cpp
         ${PROJECT_SOURCE_DIR}/src/sync_to_asnc.cpp
+        ${PROJECT_SOURCE_DIR}/src/proxying_sync_to_async.cpp
         )
 target_include_directories(tfjs_async_to_sync
         PRIVATE
@@ -34,6 +35,7 @@ target_compile_options(
         tfjs_async_to_sync
         PRIVATE
         -pthread
+        -fwasm-exceptions
 )
 
 target_link_options(
@@ -41,7 +43,10 @@ target_link_options(
         PRIVATE
         --emrun
         -pthread
+        -fwasm-exceptions
         -sPROXY_TO_PTHREAD
+        -sPTHREAD_POOL_SIZE=8
+        -sALLOW_MEMORY_GROWTH
         --js-library
         ${PROJECT_SOURCE_DIR}/src/js_functions.js
         # For testing pre-js uncomment this line

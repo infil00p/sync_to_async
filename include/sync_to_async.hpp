@@ -10,6 +10,7 @@
 #include <cassert>
 #include <emscripten.h>
 #include <emscripten/threading.h>
+#include <emscripten/proxying.h>
 #include <emscripten/val.h>
 #include <pthread.h>
 
@@ -17,6 +18,7 @@
 #include <thread>
 #include <type_traits>
 #include <utility>
+#include "common.hpp"
 
 namespace Utils {
 
@@ -24,12 +26,6 @@ namespace Utils {
         Waiting = 0,
         WorkAvailable,
         ShouldExit,
-    };
-
-    enum JsResultStatus : int {
-        OK = 0,
-        ERROR = 1,
-        NOT_STARTED = 2
     };
 
     // Helper class for generic sync-to-async conversion. Creating an instance of
