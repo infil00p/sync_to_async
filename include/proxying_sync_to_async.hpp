@@ -12,6 +12,7 @@
 #include <iostream>
 #include <mutex>
 
+// See tests/test_tfjs.cpp for usages and tests/js_includes.cpp / tests/js_functions.js for example functions
 namespace Utils {
 
     class QueuedSyncToAsync {
